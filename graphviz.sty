@@ -64,9 +64,9 @@
 }
 
 % usage: \digraph[scale=0.5]{graphName}{a->b; }
+\newwrite\dotfile 
 \newcommand{\digraph}[3][scale=1,command=dot,output=pdf]{
   \pgfkeys{/graphviz, #1}%
-  \newwrite\dotfile 
   \immediate\openout\dotfile=#2.dot
   % unexpanded force LaTeX not to evaluate passed string (necessary for allowing backslash in e.g. "\n")
   \immediate\write\dotfile{digraph #2 {\unexpanded{#3}}}
