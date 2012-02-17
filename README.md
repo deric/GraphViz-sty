@@ -59,6 +59,7 @@ Parameters to \includedot:
 1. optional parameters (default value is "scale=1") or you can use "command=twopi"
 for changing graphviz filter  (possible values "command=dot|neato|twopi|circo|fdp|sfdp" see graphviz documentation for more details)
 default is "command=dot"
+Last supported option is "output", you can use "output=ps|png|pdf" or which everformat \includegraphics supports (default if "output=pdf")
 2. name of the dot file (w/out file extension, which must be ".dot")
 
 You must use the `-shell-escape` option to pdflatex. This enables LaTeX to execute system commnds which is for security reasons disabled by default.
@@ -72,10 +73,9 @@ If you are having problems with generating output see LaTeX log for this:
 Using regular LaTeX
 -------------------
 
-To modify this command for regular latex, replace all .pdf with .ps, and the
-command becomes simply:
+To modify this command for regular LaTeX change output to ps
 
-    dot -Tps #2.dot
+    \digraph[output=ps]{MyGraph}{rankdir=LR; a->b; b->c}
 
    
 Contributors
@@ -98,4 +98,6 @@ Added includedot command.
 
 2012-02-17:
 
-Improved check for generated file by [Tomas Barton](mailto:barton.tomas@gmail.com)
+Improved check for generated file, allowed backslash and other "unsafe" characted in digraph code,
+added output option 
+by [Tomas Barton](mailto:barton.tomas@gmail.com)
