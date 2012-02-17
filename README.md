@@ -33,6 +33,11 @@ Add the following lines to your preamble:
     \usepackage[pdftex]{graphicx}
     \usepackage{graphviz}
 
+If the options "[pdflatex]" is causing troubles, replace it with 
+
+    \PassOptionsToPackage{pdftex}{graphicx}
+    \usepackage{graphicx}
+
 To include GraphViz dot syntax directly in your LaTeX source:
 
     \digraph[scale=0.5]{MyGraph}{rankdir=LR; a->b; b->c}
@@ -64,11 +69,6 @@ command becomes simply:
 
     dot -Tps #2.dot
 
-Other projects
---------------
-
-[Graphvizzz](https://code.google.com/p/graphvizzz/) on Google Code includes
-support for graph as well as digraph.
    
 Contributors
 ------------
@@ -87,3 +87,7 @@ Modified by [Mike Prentice](mailto:mjp44@buffalo.edu) to
 use PDF output directly from dot.
 
 Added includedot command.
+
+2012-02-17:
+
+Improved check for generated file by [Tomas Barton](mailto:barton.tomas@gmail.com)
