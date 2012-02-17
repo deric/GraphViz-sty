@@ -1,0 +1,48 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage[pdftex]{graphicx}
+\usepackage{graphviz}
+
+\begin{document}
+
+\begin{figure}
+  \digraph{graph1}{%
+     a -> b;
+     c -> b;
+     d -> b;
+     e -> b;
+  }
+ \caption{Using default \texttt{dot} filter to place nodes}
+\end{figure}
+
+
+\begin{figure}
+  \digraph[scale=0.5,command=neato]{graph2}{%
+     a -> b;
+     c -> b;
+     d -> b;
+     e -> b;
+  }
+ \caption{Using \texttt{neato} filter to place nodes}
+\end{figure}
+
+  \digraph[scale=0.5]{graph3}{%
+      root [ shape=Mrecord label="<f1> A|<f2> B|{<f3> C|<f4> D}|<f5> E" ];
+  }
+
+
+\begin{figure}
+  \digraph[scale=0.5,command=twopi]{graph4}{%
+     a -> b;
+     c -> b;
+     d -> b;
+     e -> b;
+  }
+ \caption{Using \texttt{twopi} filter to place nodes}
+\end{figure}
+
+\begin{figure}
+  \includedot{test}
+ \caption{\texttt{includedot} command test}
+\end{figure}
+\end{document}

@@ -1,0 +1,1 @@
+digraph test {root [ shape=Mrecord label="<f1> A|<f2> B|{<f3> C|<f4> D}|<f5> E" ]; l [shape=record label="<lp> l|<v> val"] r [shape=polygon sides=5 peripheries=2 skew=1] root:f4 -> l:lp:w root:f5:e -> r }
