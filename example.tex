@@ -7,10 +7,16 @@
 
 \begin{figure}
   \digraph{graph1}{%
-     a -> b;
-     c -> b;
-     d -> b;
-     e -> b;
+               a -> b -> c;
+               a -> {x y};
+               b [shape=box];
+               c [label="hello\nworld",color=blue,fontsize=24,
+                    fontname="Palatino-Italic",fontcolor=red,style=filled];
+               a -> z [label="hi", weight=100];
+               x -> z [label="multi-line\nlabel"];
+               edge [style=dashed,color=red];
+               b -> x;
+               {rank=same; b x}
   }
  \caption{Using default \texttt{dot} filter to place nodes}
 \end{figure}
@@ -45,4 +51,24 @@
   \includedot{test}
  \caption{\texttt{includedot} command test}
 \end{figure}
+
+\begin{figure}
+  \digraph[scale=0.5,output=png]{graph4}{%
+	node [shape=record, height=.1];
+	"*"[label="<l> |<h> *|<p> "];
+	"3" [label="<l> |<h> 3|<p> "];
+	"+" [label="<l> |<h> +|<p> "];
+	"4" [label="<l> |<h> 4|<p> "];
+	"5" [label="<l> |<h> 5|<p> "];
+	"*":l -> "3":h;
+	"*":p -> "+":h;
+	"+":l -> "4":h;
+	"+":p -> "5":h;
+  }
+ \caption{Output to PNG format}
+\end{figure}
+
+
+
+
 \end{document}
