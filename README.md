@@ -44,7 +44,9 @@ To include GraphViz dot syntax directly in your LaTeX source:
 
 Parameters to \digraph:
 
-1. parameters for \includegraphics (optional; default value is "scale=1")
+1. optional parameters (default value is "scale=1") or you can use "command=twopi"
+for changing graphviz filter  (possible values "command=dot|neato|twopi|circo|fdp|sfdp" see graphviz documentation for more details)
+default is "command=dot"
 2. name of the digraph
 3. body of the digraph
 
@@ -54,12 +56,18 @@ To include an external GraphViz dot file named mydotfile.dot:
 
 Parameters to \includedot:
 
-1. parameters for \includegraphics (optional; default value is "scale=1")
+1. optional parameters (default value is "scale=1") or you can use "command=twopi"
+for changing graphviz filter  (possible values "command=dot|neato|twopi|circo|fdp|sfdp" see graphviz documentation for more details)
+default is "command=dot"
 2. name of the dot file (w/out file extension, which must be ".dot")
 
-You must use the -shell-escape option to pdflatex:
+You must use the `-shell-escape` option to pdflatex. This enables LaTeX to execute system commnds which is for security reasons disabled by default.
 
-    $ pdflatex -shell-escape mydoc.tex
+    $ pdflatex -shell-escape *.tex
+
+If you are having problems with generating output see LaTeX log for this:
+
+    runsystem(bash -c "dot -Tpdf graph1.dot > graph1.pdf")...executed.
 
 Using regular LaTeX
 -------------------
