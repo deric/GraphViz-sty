@@ -28,7 +28,6 @@
 
 \ProvidesPackage{graphviz}
 
-
 \ifx\pdf@filemoddate\@undefined
 % Without filemoddate (e.g. XeLaTeX) only the existence of the file can be tested:
 \newcommand{\writesuccess}[2]{%
@@ -57,7 +56,6 @@
 }
 \fi
 
-
 \pgfkeys{
  /graphviz/.is family, /graphviz,
  scale/.estore in = \graphvizScale,
@@ -65,13 +63,13 @@
  output/.estore in = \graphvizOutput
 }
 
-
 % usage: \digraph[scale=0.5]{graphName}{a->b; }
 \newcommand{\digraph}[3][scale=1,command=dot,output=pdf]{
   \pgfkeys{/graphviz, #1}%
   \newwrite\dotfile 
   \immediate\openout\dotfile=#2.dot
-  \immediate\write\dotfile{digraph #2 {\string#3}} 
+  % unexpanded force LaTeX not to evaluate passed string (necessary for allowing backslash in e.g. "\n")
+  \immediate\write\dotfile{digraph #2 {\unexpanded{#3}}}
   \immediate\closeout\dotfile
   %make sure we defined a graphviz command
   \ifdefined\graphvizCommand
