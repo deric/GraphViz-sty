@@ -1,9 +1,7 @@
-graphviz.sty - A LaTeX library for GraphViz dot
+graphviz.sty - A LaTeX library for GraphViz
 ===============================================
 
-graphviz.sty lets you include GraphViz dot files directly in your LaTeX source.
-
-graphviz.sty is currently only compatible with pdflatex.
+graphviz.sty let you write GraphViz code directly in your LaTeX source.
 
 Prerequisites
 -------------
@@ -20,10 +18,13 @@ On Mac OS X with the MacTeX distribution:
 1. Make folder ~/Library/texmf/tex/latex if it doesn't already exist.
 2. Drag and drop graphviz.sty to that folder.
 
-Or for the Terminally ill:
+Or for with the terminal:
 
     $ mkdir -p ~/Library/texmf/tex/latex
     $ cp graphviz.sty ~/Library/texmf/tex/latex
+
+3. run 
+    $ texhash
 
 Usage
 -----
