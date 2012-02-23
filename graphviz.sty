@@ -92,6 +92,9 @@
   \else
     \def\graphvizOutput{pdf}
   \fi
+  \ifdefined\graphvizScale\else
+    \def\graphvizScale{1}
+  \fi
 
   \ifthenelse{\equal{\graphvizOutput}{tex}}
   {%
@@ -123,13 +126,14 @@
 \newcommand{\includedot}[2][scale=1,command=dot,output=pdf]{ %
   \pgfkeys{/graphviz, #1}%
   %make sure we defined a graphviz command
-  \ifdefined\graphvizCommand
-  \else
+  \ifdefined\graphvizCommand\else
     \def\graphvizCommand{dot}
   \fi
-  \ifdefined\graphvizOutput
-  \else
+  \ifdefined\graphvizOutput\else
     \def\graphvizOutput{pdf}
+  \fi
+  \ifdefined\graphvizScale\else
+    \def\graphvizScale{1}
   \fi
       \def\graphvizCmd{`which \graphvizCommand`\space -T\graphvizOutput\space #2.dot > #2.\graphvizOutput}
       \immediate\writesuccess{#2.\graphvizOutput}{bash -c "\graphvizCmd"}
