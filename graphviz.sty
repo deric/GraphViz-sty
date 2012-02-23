@@ -25,6 +25,7 @@
 
 %needed for parsing optional arguments separated by comma
 \usepackage{pgfkeys}
+\usepackage{ifthen}
 
 \ProvidesPackage{graphviz}
 
@@ -80,24 +81,34 @@
   \else
     \def\graphvizOutput{pdf}
   \fi
-  %after executing macro all spaces are removed, so we need to add one manually
-  \immediate\writesuccess{#2.\graphvizOutput}{bash -c "\graphvizCommand\space -T\graphvizOutput\space #2.dot > #2.\graphvizOutput"}
-  \IfFileExists{#2.pdf}
-  % the pdf exists: include it 
-  { 
-    \includegraphics[scale=\graphvizScale]{#2}
-   } 
-  % the pdf was not created - show a hint
-  {   
-     We attempted to run graphviz with:\\
-        `\texttt{\graphvizCommand\space -T\graphvizOutput #2.dot > #2.\graphvizOutput}' \\
-      but that seems not to have worked. Possible reasons are:
-        \begin{itemize}
-        \item dot is not in your path
-        \item write18 is not enabled
-        \item runsystem is disabled (try `pdflatex -shell-escape *.tex`)
-        \end{itemize}
-  } 
+
+  \ifthenelse{\equal{\graphvizOutput}{tex}}
+  {%
+    \writesuccess{#2.tex}{bash -c "`which neato` -Txdot #2.dot | `which dot2tex` -tmath --figonly --usepdflatex -ftikz --tikzedgelabels --styleonly -o #2.tex"}  
+  \IfFileExists{#2.tex}
+  % the tex exists: include it 
+  { \include{#2} } 
+  }
+  {%
+    %after executing macro all spaces are removed, so we need to add one manually
+    \immediate\writesuccess{#2.\graphvizOutput}{bash -c "\graphvizCommand\space -T\graphvizOutput\space #2.dot > #2.\graphvizOutput"}
+    \IfFileExists{#2.pdf}
+    % the pdf exists: include it 
+    { 
+      \includegraphics[scale=\graphvizScale]{#2}
+    } 
+    % the pdf was not created - show a hint
+    {   
+      We attempted to run graphviz with:\\
+	  `\texttt{\graphvizCommand\space -T\graphvizOutput #2.dot > #2.\graphvizOutput}' \\
+	but that seems not to have worked. Possible reasons are:
+	  \begin{itemize}
+	  \item dot is not in your path
+	  \item write18 is not enabled
+	  \item runsystem is disabled (try `pdflatex -shell-escape *.tex`)
+	  \end{itemize}
+    }
+  }
 }
 % Usage: \includedot[scale=0.5]{dotfile}
 \newcommand{\includedot}[2][scale=1,command=dot,output=pdf]{ %
@@ -111,18 +122,20 @@
   \else
     \def\graphvizOutput{pdf}
   \fi
-  \immediate\writesuccess{#2.\graphvizOutput}{bash -c "\graphvizCommand\space -T\graphvizOutput\space #2.dot > #2.\graphvizOutput"}
-  \IfFileExists{#2.\graphvizOutput}
-  % the pdf exists: include it
-  { \includegraphics[scale=\graphvizScale]{#2} }
-  {
-  % the pdf was not created - show a hint
-     We attempted to run graphviz with: `\texttt{\graphvizCommand\space -T\graphvizOutput #2.dot > #2.\graphvizOutput}' \\
-      but that seems not to have worked. Possible reasons are:
-        \begin{itemize}
-        \item dot is not in your path
-        \item write18 is not enabled
-        \item runsystem is disabled (try `pdflatex -shell-escape *.tex`)
-        \end{itemize}
-   }
+  
+ 
+      \immediate\writesuccess{#2.\graphvizOutput}{bash -c "\graphvizCommand\space -T\graphvizOutput\space #2.dot > #2.\graphvizOutput"}
+      \IfFileExists{#2.\graphvizOutput}
+      % the pdf exists: include it
+      { \includegraphics[scale=\graphvizScale]{#2} }
+      {
+      % the pdf was not created - show a hint
+	We attempted to run graphviz with: `\texttt{\graphvizCommand\space -T\graphvizOutput #2.dot > #2.\graphvizOutput}' \\
+	  but that seems not to have worked. Possible reasons are:
+	    \begin{itemize}
+	    \item dot is not in your path
+	    \item write18 is not enabled
+	    \item runsystem is disabled (try `pdflatex -shell-escape *.tex`)
+	    \end{itemize}
+      }
   }

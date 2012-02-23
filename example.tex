@@ -2,6 +2,12 @@
 \usepackage[utf8x]{inputenc}
 \usepackage[pdftex]{graphicx}
 \usepackage{graphviz}
+\usepackage{pdftexcmds}
+
+% using dot2tex converted output
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes}
+\usepackage{amsmath}
 
 \begin{document}
 
@@ -67,5 +73,24 @@
   }
  \caption{Output to PNG format}
 \end{figure}
+
+  \digraph[scale=0.5,output=tex]{graph6}{%
+     c -> b;
+     d -> b;
+     e -> b;
+  }
+
+  \digraph[output=tex]{graph7}{%
+	node [shape=record, height=.1];
+	"*"[label="<l> |<h> *|<p> "];
+	"3" [label="<l> |<h> 3|<p> "];
+	"+" [label="<l> |<h> +|<p> "];
+	"4" [label="<l> |<h> 4|<p> "];
+	"5" [label="<l> |<h> 5|<p> "];
+	"*":l -> "3":h;
+	"*":p -> "+":h;
+	"+":l -> "4":h;
+	"+":p -> "5":h;
+  }
 
 \end{document}

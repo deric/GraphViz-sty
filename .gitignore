@@ -2,6 +2,6 @@
 *.log
 *.aux
 graph*.dot
-*.pdf
+graph*.pdf
 *.backup
 *.png
