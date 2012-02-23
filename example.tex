@@ -1,15 +1,21 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8x]{inputenc}
 \usepackage[pdftex]{graphicx}
-\usepackage{graphviz}
-\usepackage{pdftexcmds}
 \usepackage{pgfkeys}
 \usepackage{ifthen}
+\usepackage{pdftexcmds}
+\usepackage{graphviz}
+
+
 
 % using dot2tex converted output
 \usepackage{tikz}
 \usetikzlibrary{arrows,shapes}
 \usepackage{amsmath}
+
+% this will place all graphviz files into subdirectory "graphviz" which
+% must already exist!
+% \def\graphvizDir{graphviz}
 
 \begin{document}
 
@@ -31,13 +37,13 @@
 
 
 \begin{figure}
-  \digraph[scale=0.5,layout=neato]{graph2}{%
+  \digraph[scale=0.5,layout=neato,dir=graphviz]{graph2}{%
      a -> b;
      c -> b;
      d -> b;
      e -> b;
   }
- \caption{Using \texttt{neato} filter to place nodes}
+ \caption{Using \texttt{neato} filter to place nodes, output will be stored in \texttt{graphviz} directory}
 \end{figure}
 
 \begin{figure}
