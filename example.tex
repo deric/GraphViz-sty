@@ -3,6 +3,8 @@
 \usepackage[pdftex]{graphicx}
 \usepackage{graphviz}
 \usepackage{pdftexcmds}
+\usepackage{pgfkeys}
+\usepackage{ifthen}
 
 % using dot2tex converted output
 \usepackage{tikz}
@@ -29,7 +31,7 @@
 
 
 \begin{figure}
-  \digraph[scale=0.5,command=neato]{graph2}{%
+  \digraph[scale=0.5,layout=neato]{graph2}{%
      a -> b;
      c -> b;
      d -> b;
@@ -46,7 +48,7 @@
 \end{figure}
 
 \begin{figure}
-  \digraph[command=twopi]{graph4}{%
+  \digraph[layout=twopi]{graph4}{%
      a -> b;
      c -> b;
      d -> b;
