@@ -57,6 +57,17 @@
 }
 \fi
 
+\newcommand{\showHint}[1]{%
+    We attempted to run graphviz with:\\
+	  `\texttt{#1}' \\
+    but it doesn't seem not to work. Possible reasons are:
+      \begin{itemize}
+	  \item dot is not in your path (check that command above works in terminal)
+	  \item write18 is not enabled
+	  \item runsystem is disabled (try `pdflatex -shell-escape *.tex`)
+      \end{itemize}
+}
+
 \pgfkeys{
  /graphviz/.is family, /graphviz,
  scale/.estore in = \graphvizScale,
@@ -84,14 +95,19 @@
 
   \ifthenelse{\equal{\graphvizOutput}{tex}}
   {%
-    \writesuccess{#2.tex}{bash -c "`which neato` -Txdot #2.dot | `which dot2tex` -tmath --figonly --usepdflatex -ftikz --tikzedgelabels --styleonly -o #2.tex"}  
-  \IfFileExists{#2.tex}
-  % the tex exists: include it 
-  { \include{#2} } 
+    \def\graphvizCmd{`which dot` -Txdot #2.dot | `which dot2tex` -tmath --figonly --usepdflatex -ftikz --tikzedgelabels --styleonly -o #2.tex}
+    \writesuccess{#2.tex}{bash -c "\graphvizCmd"}  
+    \IfFileExists{#2.tex}
+    % the tex exists: include it 
+    { \include{#2} }
+    {% else show a hint
+      \showHint{\graphvizCmd}
+    }
   }
   {%
+    \def\graphvizCmd{\graphvizCommand\space -T\graphvizOutput\space #2.dot > #2.\graphvizOutput}
     %after executing macro all spaces are removed, so we need to add one manually
-    \immediate\writesuccess{#2.\graphvizOutput}{bash -c "\graphvizCommand\space -T\graphvizOutput\space #2.dot > #2.\graphvizOutput"}
+    \immediate\writesuccess{#2.\graphvizOutput}{bash -c "\graphvizCmd"}
     \IfFileExists{#2.pdf}
     % the pdf exists: include it 
     { 
@@ -99,14 +115,7 @@
     } 
     % the pdf was not created - show a hint
     {   
-      We attempted to run graphviz with:\\
-	  `\texttt{\graphvizCommand\space -T\graphvizOutput #2.dot > #2.\graphvizOutput}' \\
-	but that seems not to have worked. Possible reasons are:
-	  \begin{itemize}
-	  \item dot is not in your path
-	  \item write18 is not enabled
-	  \item runsystem is disabled (try `pdflatex -shell-escape *.tex`)
-	  \end{itemize}
+      \showHint{\graphvizCmd}
     }
   }
 }
@@ -122,20 +131,13 @@
   \else
     \def\graphvizOutput{pdf}
   \fi
-  
- 
-      \immediate\writesuccess{#2.\graphvizOutput}{bash -c "\graphvizCommand\space -T\graphvizOutput\space #2.dot > #2.\graphvizOutput"}
+      \def\graphvizCmd{\graphvizCommand\space -T\graphvizOutput\space #2.dot > #2.\graphvizOutput}
+      \immediate\writesuccess{#2.\graphvizOutput}{bash -c "\graphvizCmd"}
       \IfFileExists{#2.\graphvizOutput}
       % the pdf exists: include it
       { \includegraphics[scale=\graphvizScale]{#2} }
       {
       % the pdf was not created - show a hint
-	We attempted to run graphviz with: `\texttt{\graphvizCommand\space -T\graphvizOutput #2.dot > #2.\graphvizOutput}' \\
-	  but that seems not to have worked. Possible reasons are:
-	    \begin{itemize}
-	    \item dot is not in your path
-	    \item write18 is not enabled
-	    \item runsystem is disabled (try `pdflatex -shell-escape *.tex`)
-	    \end{itemize}
+	\showHint{\graphvizCmd}
       }
   }
