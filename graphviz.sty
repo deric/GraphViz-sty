@@ -98,7 +98,7 @@
 
   \ifthenelse{\equal{\graphvizOutput}{tex}}
   {%
-    \def\graphvizCmd{`which \graphvizCommand` -Txdot #2.dot | `which dot2tex` -tmath --figonly --usepdflatex -ftikz --tikzedgelabels --styleonly -o #2.tex}
+    \def\graphvizCmd{`which \graphvizCommand` -Txdot #2.dot | `which dot2tex` -tmath --figonly --usepdflatex -ftikz -o #2.tex}
     \writesuccess{#2.tex}{bash -c "\graphvizCmd"}  
     \IfFileExists{#2.tex}
     % the tex exists: include it 
@@ -135,6 +135,19 @@
   \ifdefined\graphvizScale\else
     \def\graphvizScale{1}
   \fi
+
+  \ifthenelse{\equal{\graphvizOutput}{tex}}
+  {% TeX 
+    \def\graphvizCmd{`which dot2tex`\space -tmath --figonly --usepdflatex -ftikz #2.dot > #2.tex}
+    \writesuccess{#2.tex}{bash -c "\graphvizCmd"}  
+    \IfFileExists{#2.tex}
+    % the tex exists: include it 
+    { \include{#2} }
+    {% else show a hint
+      \showHint{\graphvizCmd}
+    }
+  }
+  {%else other output formats
       \def\graphvizCmd{`which \graphvizCommand`\space -T\graphvizOutput\space #2.dot > #2.\graphvizOutput}
       \immediate\writesuccess{#2.\graphvizOutput}{bash -c "\graphvizCmd"}
       \IfFileExists{#2.\graphvizOutput}
@@ -144,4 +157,5 @@
       % the pdf was not created - show a hint
 	\showHint{\graphvizCmd}
       }
+   }
   }
