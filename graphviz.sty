@@ -95,7 +95,7 @@
 
   \ifthenelse{\equal{\graphvizOutput}{tex}}
   {%
-    \def\graphvizCmd{`which dot` -Txdot #2.dot | `which dot2tex` -tmath --figonly --usepdflatex -ftikz --tikzedgelabels --styleonly -o #2.tex}
+    \def\graphvizCmd{`which \graphvizCommand` -Txdot #2.dot | `which dot2tex` -tmath --figonly --usepdflatex -ftikz --tikzedgelabels --styleonly -o #2.tex}
     \writesuccess{#2.tex}{bash -c "\graphvizCmd"}  
     \IfFileExists{#2.tex}
     % the tex exists: include it 
@@ -105,7 +105,7 @@
     }
   }
   {%
-    \def\graphvizCmd{\graphvizCommand\space -T\graphvizOutput\space #2.dot > #2.\graphvizOutput}
+    \def\graphvizCmd{`which \graphvizCommand`\space -T\graphvizOutput\space #2.dot > #2.\graphvizOutput}
     %after executing macro all spaces are removed, so we need to add one manually
     \immediate\writesuccess{#2.\graphvizOutput}{bash -c "\graphvizCmd"}
     \IfFileExists{#2.pdf}
@@ -131,7 +131,7 @@
   \else
     \def\graphvizOutput{pdf}
   \fi
-      \def\graphvizCmd{\graphvizCommand\space -T\graphvizOutput\space #2.dot > #2.\graphvizOutput}
+      \def\graphvizCmd{`which \graphvizCommand`\space -T\graphvizOutput\space #2.dot > #2.\graphvizOutput}
       \immediate\writesuccess{#2.\graphvizOutput}{bash -c "\graphvizCmd"}
       \IfFileExists{#2.\graphvizOutput}
       % the pdf exists: include it
