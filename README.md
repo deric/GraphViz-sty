@@ -37,7 +37,7 @@ If the options "[pdflatex]" is causing troubles, replace it with
     \PassOptionsToPackage{pdftex}{graphicx}
     \usepackage{graphicx}
 
-graphviz.sty supports two environments (which produces oriented graphs):
+graphviz.sty supports two environments, `digraph` (which produces oriented graphs):
 
     \begin{digraph}[scale=0.5]{MyDiGraph}
 	rankdir=LR; 
