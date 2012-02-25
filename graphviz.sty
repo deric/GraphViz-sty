@@ -8,36 +8,42 @@
 
 % add the following lines to your preamble:
 
-%% if passing argument to graphicx fails try:
-%%\PassOptionsToPackage{pdftex}{graphicx}
-%%\usepackage{graphicx}
-
-% \usepackage[pdftex]{graphicx}
-% \usepackage{graphviz}
+% \usepackage[pdftex]{graphicx} 
 % \usepackage{pgfkeys}
 % \usepackage{ifthen}
+% \usepackage{environ}
+% \usepackage{graphviz}
 
+%% if passing argument to graphicx fails try:
+%% \PassOptionsToPackage{pdftex}{graphicx}
+%% \usepackage{graphicx}
+
+% usage: \begin{digraph}[scale=0.5]{graphName}
+%  	    a->b;         
+%        \end{digraph}
+% for graphviz syntax see http://graphviz.org/
 
 % parameters to \digraph:
 % 1 - optional parameters (default value is "scale=1") or you can use "layout=twopi"
 %     for changing graphviz filter  (possible values "layout=dot|neato|twopi|circo|fdp|sfdp" see graphviz documentation for more details)
 %     default is "layout=dot"
 % 2 - name of the digraph
-% 3 - body of the digraph
-
-%needed for parsing optional arguments separated by comma
-
+%
+% !!! make sure you compile your document with `pdflatex -shell-escape doc.tex`
+% "-shell-escape" allows pdflatex to execute code in bash, which is
+% for security reasons forbidden in most LaTeX distributions
+%
 \ProvidesPackage{graphviz}
 
 \ifx\pdf@filemoddate\@undefined
 % Without filemoddate (e.g. XeLaTeX) only the existence of the file can be tested:
-\newcommand{\writesuccess}[2]{%
+\newcommand*{\writesuccess}[2]{%
     \immediate\write18{#2}%
     \IfFileExists{#1}%
 }
 \else
 % Check if to-be-generated file exists afterwards and is newer:
-\newcommand{\writesuccess}[2]{%
+\newcommand*{\writesuccess}[2]{%
     \begingroup
     \edef\filemodbefore{\pdf@filemoddate{#1}}%
     \immediate\write18{#2}%
@@ -57,7 +63,7 @@
 }
 \fi
 
-\newcommand{\showHint}[1]{%
+\def\showHint#1{%
     We attempted to run graphviz with:\\
 	  `\texttt{#1}' \\
     but it doesn't seem not to work. Possible reasons are:
@@ -81,31 +87,7 @@
  dotTotex/.estore in = \dotTotexOptions
 }
 
-% usage: \digraph[scale=0.5]{graphName}{a->b; }
-\newwrite\dotfile 
-\newcommand{\digraph}[3][scale=1,layout=dot,output=pdf]{
-  \pgfkeys{/graphviz, #1}%
-  \ifdefined\graphvizDir
-    \def\filename{\graphvizDir/\unexpanded{#2}}
-  \else
-    \def\filename{\unexpanded{#2}}
-  \fi
-
-  \immediate\openout\dotfile=\filename.dot
-  % unexpanded force LaTeX not to evaluate passed string (necessary for allowing backslash in e.g. "\n")
-  \immediate\write\dotfile{digraph "\unexpanded{#2}" {\unexpanded{#3}}}
-  \immediate\closeout\dotfile
-  %make sure we defined a graphviz command
-  \ifdefined\graphvizLayout\else
-    \def\graphvizLayout{dot}
-  \fi
-  \ifdefined\graphvizOutput\else
-    \def\graphvizOutput{pdf}
-  \fi
-  \ifdefined\graphvizScale\else
-    \def\graphvizScale{1}
-  \fi
-
+\def\renderGraphviz{
   \ifthenelse{\equal{\graphvizOutput}{tex}}
   {%
     \def\graphvizCmd{`which \graphvizLayout` -Txdot \filename.dot | `which dot2tex` -tmath --figonly --usepdflatex -ftikz -o \filename.tex}
@@ -133,20 +115,9 @@
   }
 }
 % Usage: \includedot[scale=0.5]{dotfile}
-\newcommand{\includedot}[2][scale=1,layout=dot,output=pdf]{ %
+\newcommand*{\includedot}[2][scale=1,layout=dot,output=pdf]{ %
   \pgfkeys{/graphviz, #1}%
-  %make sure we defined a graphviz command
-  \ifdefined\graphvizLayout\else
-    \def\graphvizLayout{dot}
-  \fi
-  \ifdefined\graphvizOutput\else
-    \def\graphvizOutput{pdf}
-  \fi
-  \ifdefined\graphvizScale\else
-    \def\graphvizScale{1}
-  \fi
-
-
+  \graphvizDefaultSettings
   \def\filename{#2}
 
   \ifthenelse{\equal{\graphvizOutput}{tex}}
@@ -172,3 +143,70 @@
       }
    }
   }
+
+\newwrite\dotfile
+%write output to dot file
+\def\writeDotFile#1{% 
+  \immediate\openout\dotfile=\filename.dot
+  \typeout{writing graph to '\filename.dot'}
+  % unexpanded force LaTeX not to evaluate passed string (necessary for allowing backslash in e.g. "\n")
+  \immediate\write\dotfile{\graphvizType\space "\filename" {\unexpanded{#1}}}
+  \immediate\closeout\dotfile
+  \graphvizDefaultSettings
+  \renderGraphviz
+}
+
+\newcommand*{\graphvizDefaultSettings}{
+  %make sure we defined a graphviz command
+  \ifdefined\graphvizLayout\else
+    \def\graphvizLayout{dot}
+  \fi
+  \ifdefined\graphvizOutput\else
+    \def\graphvizOutput{pdf}
+  \fi
+  \ifdefined\graphvizScale\else
+    \def\graphvizScale{1}
+  \fi
+}
+
+\newcommand*{\graphvizProcessDiagram}[2]{
+  \ifthenelse{\equal{#2}{}}{
+    \typeout{missing name}
+  }{}
+%parse options
+  \pgfkeys{/graphviz, #1}%
+  \ifdefined\graphvizDir
+    \def\filename{\graphvizDir/\unexpanded{#2}}
+  \else
+    \def\filename{\unexpanded{#2}}
+  \fi
+\typeout{1: #1}
+\typeout{2: #2}
+  %writes environment to a file  
+  \Collect@Body\writeDotFile
+}
+
+% first argument is the one in []
+% \begin{graph}[first]{name}
+% \end{graph}
+\newenvironment{graph}[2][scale=1,layout=dot,output=pdf]%
+{
+\def\graphvizType{graph}
+%header
+  \graphvizProcessDiagram{#1}{#2}
+}{
+%footer - this block is added after 
+}
+
+% first argument is the one in []
+% \begin{digraph}[first]{name}
+% \end{digraph}
+\newenvironment{digraph}[2][scale=1,layout=dot,output=pdf]%
+{
+\def\graphvizType{digraph}
+%header
+  \graphvizProcessDiagram{#1}{#2} 
+}{
+%footer - this block is added after 
+}
+
