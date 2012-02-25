@@ -96,15 +96,18 @@ Contributors
 graphviz.sty is based on graphviz.tex by Derek Rayside (2003).
 
 2006-03-25: Modified by [Mark Aufflick](mailto:mark@aufflick.com)
- * website: [http://mark.aufflick.com/](http://mark.aufflick.com/)
+
+* website: [http://mark.aufflick.com/](http://mark.aufflick.com/)
 
 2011-02-21: Modified by [Mike Prentice](mailto:mjp44@buffalo.edu) 
- * use of PDF output directly from dot.
- * added includedot layout.
+
+* use of PDF output directly from dot.
+* added includedot layout.
 
 2012-02-17: Modified by [Tomas Barton](mailto:barton.tomas@gmail.com)
- * Improved check for generated file, allowed backslash and other "unsafe" characted in digraph code
- * Added output option
- * changed \digraph command to `digraph` and `graph` environment which follows much more LaTeX conventions
- * supports conversion with `dot2tex`
+
+* Improved check for generated file, allowed backslash and other "unsafe" characted in digraph code
+* Added output option
+* changed \digraph command to `digraph` and `graph` environment which follows much more LaTeX conventions
+* supports conversion with `dot2tex`
 
