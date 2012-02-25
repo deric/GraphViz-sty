@@ -4,6 +4,7 @@
 \usepackage{pgfkeys}
 \usepackage{ifthen}
 \usepackage{pdftexcmds}
+\usepackage{environ}
 \usepackage{graphviz}
 
 
@@ -20,7 +21,7 @@
 \begin{document}
 
 \begin{figure}
-  \digraph{graph1}{%
+  \begin{digraph}{graph1}
                a -> b -> c;
                a -> {x y};
                b [shape=box];
@@ -31,35 +32,34 @@
                edge [style=dashed,color=red];
                b -> x;
                {rank=same; b x}
-  }
+  \end{digraph}
  \caption{Using default \texttt{dot} filter to place nodes}
 \end{figure}
 
-
 \begin{figure}
-  \digraph[scale=0.5,layout=neato,dir=graphviz]{graph2}{%
-     a -> b;
-     c -> b;
-     d -> b;
-     e -> b;
-  }
+  \begin{digraph}[scale=0.5,layout=neato,dir=graphviz]{graph2}
+      a -> b;
+      c -> b;
+      d -> b;
+      e -> b;
+  \end{digraph}
  \caption{Using \texttt{neato} filter to place nodes, output will be stored in \texttt{graphviz} directory}
 \end{figure}
 
 \begin{figure}
-  \digraph[scale=0.5]{graph3}{%
-      root [ shape=Mrecord label="<f1> A|<f2> B|{<f3> C|<f4> D}|<f5> E" ];
-  }
+  \begin{digraph}[scale=0.6]{graph3}
+  root [ shape=Mrecord label="<f1> A|<f2> B|{<f3> C|<f4> D}|<f5> E" ];
+  \end{digraph}
   \caption{testing shapes, \texttt{scale=0.5}}
 \end{figure}
 
 \begin{figure}
-  \digraph[layout=twopi]{un-safe-name}{%
-     a -> b;
-     c -> b;
-     d -> b;
-     e -> b;
-  }
+  \begin{digraph}[layout=twopi,scale=0.6]{un-safe-name}
+      a -> b;
+      c -> b;
+      d -> b;
+      e -> b;
+  \end{digraph}
  \caption{Using \texttt{twopi} filter to place nodes}
 \end{figure}
 
@@ -69,28 +69,28 @@
 \end{figure}
 
 \begin{figure}
-  \digraph[scale=0.5,output=png]{graph5}{%
-	node [shape=record, height=.1];
-	"*"[label="<l> |<h> *|<p> "];
-	"3" [label="<l> |<h> 3|<p> "];
-	"+" [label="<l> |<h> +|<p> "];
-	"4" [label="<l> |<h> 4|<p> "];
-	"5" [label="<l> |<h> 5|<p> "];
-	"*":l -> "3":h;
-	"*":p -> "+":h;
-	"+":l -> "4":h;
-	"+":p -> "5":h;
-  }
+  \begin{digraph}[scale=0.5,output=png]{graph5}
+      node [shape=record, height=.1];
+      "*"[label="<l> |<h> *|<p> "];
+      "3" [label="<l> |<h> 3|<p> "];
+      "+" [label="<l> |<h> +|<p> "];
+      "4" [label="<l> |<h> 4|<p> "];
+      "5" [label="<l> |<h> 5|<p> "];
+      "*":l -> "3":h;
+      "*":p -> "+":h;
+      "+":l -> "4":h;
+      "+":p -> "5":h;
+  \end{digraph}
  \caption{Output to PNG format}
 \end{figure}
 
 \begin{figure}
-  \digraph[output=tex]{graph6}{%
-     c -> b;
-     d -> b;
-     e -> b;
-  }
- \caption{digraph with option \texttt{output=tex}, \texttt{dot2tex} is used for conversion}
+  \begin{digraph}[output=tex]{graph6}
+      c -> b;
+      d -> b;
+      e -> b;
+  \end{digraph}
+  \caption{digraph with option \texttt{output=tex}, \texttt{dot2tex} is used for conversion}
 \end{figure}
 
 \begin{figure}
@@ -98,5 +98,28 @@
  \caption{\texttt{includedot} command test}
 \end{figure}
 
+\begin{figure}
+  \begin{graph}[scale=0.5]{graph7}
+      a -- b;
+      a -- c;
+      b -- c;
+  \end{graph}
+  \caption{non-oriented diagram produced in \texttt{graph} environment}
+\end{figure}
+
+\begin{figure}
+  \begin{digraph}[scale=0.8]{graph8}
+    /* declare nodes & style them */
+    a [label="Node 1"];
+    b [label="Node 2",style=filled,fillcolor=coral ];
+    c [label="Node 3", shape=square, style=filled, fillcolor=green ];
+    d [label="Node 4", style=filled, fillcolor=cadetblue1,peripheries = 2  ]
+    /* declare edges & style them */
+    a -> b [dir=none, weight=1, penwidth=3] ;
+    b -> c [dir=both, color=maroon1] ;
+    a -> d [arrowsize=1.5, weight=2.]
+  \end{digraph}
+  \caption{some colors and shapes}
+\end{figure}
 
 \end{document}
