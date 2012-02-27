@@ -42,16 +42,16 @@ graphviz.sty supports two environments, `digraph` (which produces oriented graph
 	b->c;
     \end{digraph}
 
-and `graph` for non-oriented graphs:
+and `graphviz` for non-oriented graphs:
 
-    \begin{graph}{MyGraph}
+    \begin{graphviz}{MyGraph}
 	a--b; 
 	b--c;
-    \end{graph}
+    \end{graphviz}
 
 
 
-Parameters for `digraph` or `graph` environment:
+Parameters for `digraph` or `graphviz` environment:
 
 1. optional parameters: 
     * `scale` -- default value is "scale=1"
