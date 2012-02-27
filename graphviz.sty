@@ -34,6 +34,9 @@
 % for security reasons forbidden in most LaTeX distributions
 %
 \ProvidesPackage{graphviz}
+\RequirePackage{pgfkeys}
+\RequirePackage{ifthen}
+\RequirePackage{environ}
 
 \ifx\pdf@filemoddate\@undefined
 % Without filemoddate (e.g. XeLaTeX) only the existence of the file can be tested:

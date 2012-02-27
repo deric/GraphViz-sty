@@ -1,10 +1,6 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8x]{inputenc}
 \usepackage[pdftex]{graphicx}
-\usepackage{pgfkeys}
-\usepackage{ifthen}
-\usepackage{pdftexcmds}
-\usepackage{environ}
 \usepackage{graphviz}
 
 
@@ -99,11 +95,11 @@
 \end{figure}
 
 \begin{figure}
-  \begin{graph}[scale=0.5]{graph7}
+  \begin{graphviz}[scale=0.5]{graph7}
       a -- b;
       a -- c;
       b -- c;
-  \end{graph}
+  \end{graphviz}
   \caption{non-oriented diagram produced in \texttt{graph} environment}
 \end{figure}
 

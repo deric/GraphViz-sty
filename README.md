@@ -12,7 +12,7 @@ Copy graphviz.sty to your texmf directory.
 
 LaTeX distribution folder can be found
   * On Mac OS X with the MacTeX distribution: ~/Library/texmf/tex/latex
-  * On Debian Linux it's usually: /usr/share/texmf-texlive/tex/latex/
+  * On Linux it's usually: /usr/share/texmf-texlive/tex/latex/
 
 1. Copy graphviz.sty to you LaTeX distribution folder
 2. run 
@@ -24,10 +24,6 @@ Add the following lines to your preamble:
 
     \usepackage[pdftex]{graphicx}
     \usepackage{graphviz}
-    \usepackage{pdftexcmds}
-    \usepackage{pgfkeys}
-    \usepackage{environ}
-    \usepackage{ifthen}
 
 If the options "[pdflatex]" is causing troubles, replace it with 
 
