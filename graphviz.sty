@@ -90,23 +90,23 @@
 \def\renderGraphviz{
   \ifthenelse{\equal{\graphvizOutput}{tex}}
   {%
-    \def\graphvizCmd{`which \graphvizLayout` -Txdot \filename.dot | `which dot2tex` -tmath --figonly --usepdflatex -ftikz -o \filename.tex}
-    \writesuccess{\filename.tex}{bash -c "\graphvizCmd"}  
-    \IfFileExists{\filename.tex}
+    \def\graphvizCmd{`which \graphvizLayout` -Txdot \graphvizFilename.dot | `which dot2tex` -tmath --figonly --usepdflatex -ftikz -o \graphvizFilename.tex}
+    \writesuccess{\graphvizFilename.tex}{bash -c "\graphvizCmd"}  
+    \IfFileExists{\graphvizFilename.tex}
     % the tex exists: include it 
-    { \include{\filename} }
+    { \include{\graphvizFilename} }
     {% else show a hint
       \showHint{\graphvizCmd}
     }
   }
   {%
-    \def\graphvizCmd{`which \graphvizLayout`\space -T\graphvizOutput\space \filename.dot > \filename.\graphvizOutput}
+    \def\graphvizCmd{`which \graphvizLayout`\space -T\graphvizOutput\space \graphvizFilename.dot > \graphvizFilename.\graphvizOutput}
     %after executing macro all spaces are removed, so we need to add one manually
-    \immediate\writesuccess{\filename.\graphvizOutput}{bash -c "\graphvizCmd"}
-    \IfFileExists{\filename.pdf}
+    \immediate\writesuccess{\graphvizFilename.\graphvizOutput}{bash -c "\graphvizCmd"}
+    \IfFileExists{\graphvizFilename.pdf}
     % the pdf exists: include it 
     { 
-      \includegraphics[scale=\graphvizScale]{\filename}
+      \includegraphics[scale=\graphvizScale]{\graphvizFilename}
     } 
     % the pdf was not created - show a hint
     {   
@@ -118,25 +118,25 @@
 \newcommand*{\includedot}[2][scale=1,layout=dot,output=pdf]{ %
   \pgfkeys{/graphviz, #1}%
   \graphvizDefaultSettings
-  \def\filename{#2}
+  \def\graphvizFilename{#2}
 
   \ifthenelse{\equal{\graphvizOutput}{tex}}
   {% TeX 
-    \def\graphvizCmd{`which dot2tex`\space -tmath --figonly --usepdflatex -ftikz \filename.dot > \filename.tex}
-    \writesuccess{\filename.tex}{bash -c "\graphvizCmd"}  
-    \IfFileExists{\filename.tex}
+    \def\graphvizCmd{`which dot2tex`\space -tmath --figonly --usepdflatex -ftikz \graphvizFilename.dot > \graphvizFilename.tex}
+    \writesuccess{\graphvizFilename.tex}{bash -c "\graphvizCmd"}  
+    \IfFileExists{\graphvizFilename.tex}
     % the tex exists: include it 
-    { \include{\filename} }
+    { \include{\graphvizFilename} }
     {% else show a hint
       \showHint{\graphvizCmd}
     }
   }
   {%else other output formats
-      \def\graphvizCmd{`which \graphvizLayout`\space -T\graphvizOutput\space \filename.dot > \filename.\graphvizOutput}
-      \immediate\writesuccess{\filename.\graphvizOutput}{bash -c "\graphvizCmd"}
+      \def\graphvizCmd{`which \graphvizLayout`\space -T\graphvizOutput\space \graphvizFilename.dot > \graphvizFilename.\graphvizOutput}
+      \immediate\writesuccess{\graphvizFilename.\graphvizOutput}{bash -c "\graphvizCmd"}
       \IfFileExists{#2.\graphvizOutput}
       % the pdf exists: include it
-      { \includegraphics[scale=\graphvizScale]{\filename} }
+      { \includegraphics[scale=\graphvizScale]{\graphvizFilename} }
       {
       % the pdf was not created - show a hint
 	\showHint{\graphvizCmd}
@@ -147,10 +147,10 @@
 \newwrite\dotfile
 %write output to dot file
 \def\writeDotFile#1{% 
-  \immediate\openout\dotfile=\filename.dot
-  \typeout{writing graph to '\filename.dot'}
+  \immediate\openout\dotfile=\graphvizFilename.dot
+  \typeout{writing graph to '\graphvizFilename.dot'}
   % unexpanded force LaTeX not to evaluate passed string (necessary for allowing backslash in e.g. "\n")
-  \immediate\write\dotfile{\graphvizType\space "\filename" {\unexpanded{#1}}}
+  \immediate\write\dotfile{\graphvizType\space "\graphvizName" {\unexpanded{#1}}}
   \immediate\closeout\dotfile
   \graphvizDefaultSettings
   \renderGraphviz
@@ -175,10 +175,11 @@
   }{}
 %parse options
   \pgfkeys{/graphviz, #1}%
+  \def\graphvizName{\unexpanded{#2}}
   \ifdefined\graphvizDir
-    \def\filename{\graphvizDir/\unexpanded{#2}}
+    \def\graphvizFilename{\graphvizDir/\unexpanded{#2}}
   \else
-    \def\filename{\unexpanded{#2}}
+    \def\graphvizFilename{\unexpanded{#2}}
   \fi
 \typeout{1: #1}
 \typeout{2: #2}
@@ -187,9 +188,9 @@
 }
 
 % first argument is the one in []
-% \begin{graph}[first]{name}
-% \end{graph}
-\newenvironment{graph}[2][scale=1,layout=dot,output=pdf]%
+% \begin{graphviz}[first]{name}
+% \end{graphviz}
+\newenvironment{graphviz}[2][scale=1,layout=dot,output=pdf]%
 {
 \def\graphvizType{graph}
 %header
@@ -205,7 +206,7 @@
 {
 \def\graphvizType{digraph}
 %header
-  \graphvizProcessDiagram{#1}{#2} 
+  \graphvizProcessDiagram{#1}{#2}
 }{
 %footer - this block is added after 
 }
